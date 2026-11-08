@@ -305,21 +305,22 @@ const themes = [
   ["violet", "#7c4dff", "#b79cff", "#16161a", "#e8e9ee"],
   ["ocean", "#3ba3ff", "#8fd0ff", "#121820", "#e6edf5"],
   ["mint", "#34d399", "#8ee8c4", "#101a17", "#e4f2ec"],
-  ["amber", "#ffb454", "#ffd79b", "#1b1712", "#f4ede3"],
   ["rose", "#ff6b8a", "#ffb3c3", "#1b1418", "#f5e8ec"],
   ["mono", "#c9cdd6", "#ffffff", "#15161a", "#edeef2"],
   ["ice", "#67d5ff", "#bfeaff", "#101820", "#e6f1f7"],
-  ["sunset", "#ff8a5b", "#ffc29e", "#1c1512", "#f7eae2"],
   ["grape", "#a855f7", "#d5b4ff", "#17131f", "#efe7f7"],
   ["lime", "#a3e635", "#d9f99d", "#141a10", "#eaf3df"],
   ["crimson", "#f43f5e", "#ff9eb0", "#1b1115", "#f5e4e8"],
-  ["slate", "#94a3b8", "#e2e8f0", "#151a21", "#e8edf3"],
   ["dark", "#f2f3f7", "#14161b", "#0a0b0e", "#f2f3f7"],
   ["white", "#3b82f6", "#ffffff", "#f4f2ed", "#1c1d22"],
-  ["graphene", "#8b94a3", "#c9d1dc", "#111318", "#e6eaf0"]
+  ["graphene", "#8b94a3", "#c9d1dc", "#111318", "#e6eaf0"],
+  ["aurora", "#2dd4bf", "#99f6e4", "#0e1a19", "#e2f5f1"],
+  ["nebula", "#6366f1", "#c7d2fe", "#121331", "#e9eafb"],
+  ["cobalt", "#2563eb", "#93c5fd", "#0e1420", "#e4ebf7"],
+  ["jade", "#10b981", "#6ee7b7", "#0d1815", "#e3f3ec"]
 ];
 
-const defaultTheme = "graphene";
+const defaultTheme = "grape";
 
 const themeGrid = document.getElementById("themeGrid");
 
@@ -347,6 +348,92 @@ themes.forEach(([name, primary, secondary, surface, text]) => {
 });
 
 const glowBtn = document.getElementById("glowBtn");
+const modeDefs = [
+  ["cube", "#7c4dff"],
+  ["ship", "#3ba3ff"],
+  ["ball", "#34d399"],
+  ["ufo", "#ff6b8a"],
+  ["wave", "#67d5ff"],
+  ["robot", "#a855f7"],
+  ["spider", "#a3e635"],
+  ["swing", "#f43f5e"]
+];
+
+const modeGrid = document.getElementById("modeGrid");
+const modesHint = document.getElementById("modesHint");
+let modeTicks = modeDefs.map(() => 0);
+
+try {
+  const storedModes = JSON.parse(localStorage.getItem("afterflow-mode-ticks") || "[]");
+  if (Array.isArray(storedModes) && storedModes.length === modeDefs.length) {
+    modeTicks = storedModes.map((value) => Math.min(TICKS_MAX, Math.max(0, Math.round(Number(value) || 0))));
+  }
+} catch {}
+
+function saveModes() {
+  try {
+    localStorage.setItem("afterflow-mode-ticks", JSON.stringify(modeTicks));
+  } catch {}
+}
+
+function modeValueAt(index) {
+  return modeTicks[index] > 0 ? modeTicks[index] : Math.max(stageAt(currentStage).all, 1);
+}
+
+function renderModes() {
+  modeGrid.innerHTML = "";
+  modeDefs.forEach(([name, color], index) => {
+    const override = modeTicks[index];
+    const tile = document.createElement("div");
+    tile.className = "mode-tile" + (override > 0 ? " set" : "");
+    tile.style.setProperty("--mode", color);
+    tile.setAttribute("role", "group");
+    tile.setAttribute("aria-label", name + (override > 0 ? " " + override + " ticks" : " auto"));
+    tile.innerHTML = `
+      <span class="mode-icon"><img src="assets/icons/${name}.png" alt="" loading="lazy"></span>
+      <span class="mode-name">${name}</span>
+      <span class="mode-value">${override > 0 ? override + "t" : "auto"}</span>
+      <button class="mode-step left" data-dir="-1" aria-label="less ticks for ${name}">-</button>
+      <button class="mode-step right" data-dir="1" aria-label="more ticks for ${name}">+</button>
+    `;
+    tile.querySelectorAll(".mode-step").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        stepMode(index, Number(button.dataset.dir));
+      });
+    });
+    tile.addEventListener("click", () => {
+      if (modeTicks[index] === 0) return;
+      modeTicks[index] = 0;
+      saveModes();
+      renderModes();
+      pushLine(`mode reset -> ${name} follows the stage (${Math.max(stageAt(currentStage).all, 1)}t)`);
+    });
+    modeGrid.appendChild(tile);
+  });
+  const overrides = modeTicks.filter((value) => value > 0).length;
+  modesHint.textContent = overrides === 0
+    ? "every mode follows the stage, tap - or + to override one"
+    : overrides + (overrides === 1 ? " mode tuned" : " modes tuned") + ", tap a tile to put it back on auto";
+}
+
+function stepMode(index, dir) {
+  const name = modeDefs[index][0];
+  const next = Math.min(TICKS_MAX, Math.max(1, modeValueAt(index) + dir));
+  modeTicks[index] = next;
+  saveModes();
+  renderModes();
+  pushLine(`mode set -> ${name} ${next}t`);
+}
+
+document.getElementById("allAutoBtn").addEventListener("click", () => {
+  modeTicks = modeDefs.map(() => 0);
+  saveModes();
+  renderModes();
+  pushLine("modes reset -> every mode follows the stage");
+});
+
+renderModes();
 const glowLabel = document.getElementById("glowLabel");
 
 glowBtn.addEventListener("click", () => {

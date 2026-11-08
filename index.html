@@ -87,6 +87,7 @@
         <div class="deck-tabs" role="tablist" aria-label="deck sections">
           <button class="tab active" data-tab="log" role="tab" aria-selected="true">log</button>
           <button class="tab" data-tab="stage" role="tab" aria-selected="false">stage</button>
+          <button class="tab" data-tab="modes" role="tab" aria-selected="false">modes</button>
           <button class="tab" data-tab="settings" role="tab" aria-selected="false">settings</button>
         </div>
 
@@ -142,6 +143,16 @@
               </div>
               <p class="stage-hint">tap + custom to make an editable copy of this stage</p>
             </div>
+          </div>
+
+          <div class="pane" data-pane="modes">
+            <div class="pane-head">
+              <span class="pane-title">ticks per mode</span>
+              <span class="spacer"></span>
+              <button class="mini-btn" id="allAutoBtn">all auto</button>
+            </div>
+            <div class="mode-grid" id="modeGrid"></div>
+            <p class="stage-hint" id="modesHint">tap - or + to tune a mode, tap the tile for auto</p>
           </div>
 
           <div class="pane" data-pane="settings">
@@ -226,7 +237,8 @@
   </ol>
 
   <dl class="spec">
-    <div><dt>themes</dt><dd>14 presets with live color, from violet to white</dd></div>
+    <div><dt>themes</dt><dd>16 presets with live color, from violet to jade</dd></div>
+    <div><dt>modes</dt><dd>ticks tuned per game mode, cube through swing</dd></div>
     <div><dt>builds</dt><dd>windows, macos, ios and android, one panel everywhere</dd></div>
     <div><dt>buffer</dt><dd>up to 40 ticks, ten frames of lookahead at 60fps</dd></div>
   </dl>
