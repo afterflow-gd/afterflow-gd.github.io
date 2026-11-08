@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>afterflow</title>
+<meta name="description" content="a predictive input cheat for geometry dash. fixes your early clicks and makes them accurate.">
+<meta name="theme-color" content="#0e0e12">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="assets/afterflow-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">skip to content</a>
+
+<div class="vanta" id="vantaBg" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="#top">
+    <img src="assets/afterflow-logo.png" alt="" width="28" height="28" fetchpriority="high">
+    <span>afterflow</span>
+  </a>
+  <nav class="nav-links" aria-label="sections">
+    <a href="#preview">preview</a>
+    <a href="#features">features</a>
+    <a href="https://github.com/afterflow-gd/afterflow" target="_blank" rel="noreferrer">github</a>
+  </nav>
+  <a class="nav-cta" data-download href="https://github.com/afterflow-gd/afterflow/releases/latest/download/afterflow.prsevend.geode" target="_blank" rel="noreferrer">download</a>
+</header>
+
+<main id="main" tabindex="-1">
+<span id="top"></span>
+
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="beacon" aria-hidden="true"></span>geode mod for geometry dash 2.2081</p>
+      <h1 class="hero-title">afterflow</h1>
+      <p class="hero-lede">make your inputs feel like they were always on time.</p>
+      <p class="hero-desc">a predictive input cheat for geometry dash. it fixes your early clicks and makes them accurate, with customizable ui colors and a polished control panel.</p>
+      <div class="hero-actions">
+        <a class="btn primary" data-download href="https://github.com/afterflow-gd/afterflow/releases/latest/download/afterflow.prsevend.geode" target="_blank" rel="noreferrer">download latest</a>
+        <a class="btn ghost" href="https://github.com/afterflow-gd/afterflow" target="_blank" rel="noreferrer">view source</a>
+      </div>
+      <div class="hero-meta">
+        <span class="version" data-version>checking latest release</span>
+        <span class="meta-sep" aria-hidden="true">/</span>
+        <span>windows, macos, ios, android</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-console" aria-hidden="true">
+    <span class="console-tag">log</span>
+    <span class="tick-text" id="heroTicker">stage set -&gt; stage 7: 40 ticks all | 20 ticks wave (10f all | 5f wave @ 60fps)</span>
+  </div>
+</section>
+
+<section class="preview-section" id="preview">
+  <div class="section-head split">
+    <div>
+      <h2>ui preview</h2>
+      <p>the real panel, rebuilt in html. click the tabs, drag the sliders, flip the settings.</p>
+    </div>
+    <span class="section-tag">interactive</span>
+  </div>
+
+  <div class="preview-wrap" id="previewWrap">
+    <div class="preview-glow" aria-hidden="true"></div>
+
+    <div class="deck-frame" id="deckFrame">
+      <div class="deck" id="deck">
+        <div class="deck-header">
+          <div class="deck-brand">
+            <img src="assets/afterflow-logo.png" alt="" width="30" height="30">
+            <span>afterflow</span>
+          </div>
+          <div class="deck-top-right">
+            <button class="status-chip" id="bufferChip"><i></i>buffer on</button>
+            <button class="close-x" id="closeDeck" aria-label="close panel">x</button>
+          </div>
+        </div>
+
+        <div class="deck-tabs" role="tablist" aria-label="deck sections">
+          <button class="tab active" data-tab="log" role="tab" aria-selected="true">log</button>
+          <button class="tab" data-tab="stage" role="tab" aria-selected="false">stage</button>
+          <button class="tab" data-tab="settings" role="tab" aria-selected="false">settings</button>
+        </div>
+
+        <div class="deck-body">
+          <div class="pane active" data-pane="log">
+            <div class="pane-head">
+              <span class="pane-title">log</span>
+              <span class="pane-count">/ <b id="logCount">5</b> events</span>
+              <span class="spacer"></span>
+              <button class="mini-btn" id="expandBtn">expand</button>
+              <button class="mini-btn" id="copyBtn">copy</button>
+            </div>
+            <div class="log" id="log" role="region" aria-label="demo log" aria-live="off">
+              <div class="log-line">starting mode: stage 1: 2 ticks all | 2 ticks wave (0.5f all | 0.5f wave @ 60fps)</div>
+              <div class="log-line">f6 cycles anywhere: 2/2 -&gt; 4/4 -&gt; 8/8 -&gt; 16/8 -&gt; 24/12 -&gt; 32/16 -&gt; 40/20 -&gt; off</div>
+              <div class="log-line">f9 opens the control deck</div>
+              <div class="log-line">host os: windows (native)</div>
+              <div class="log-line latest">buffer ready | 2t all / 2t wave | f6 cycles</div>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="stage">
+            <div class="stage-card">
+              <div class="stage-top">
+                <div>
+                  <h3 id="stageName">tight</h3>
+                  <p id="stageTicks">2 ticks all <span class="sep">/</span> 2 ticks wave</p>
+                </div>
+                <div class="stage-right">
+                  <span class="stage-index" id="stageIndex">01/08</span>
+                  <div class="stage-actions">
+                    <button class="mini-btn remove" id="removeBtn" hidden>remove</button>
+                    <button class="mini-btn plus" id="customBtn">+ custom</button>
+                  </div>
+                </div>
+              </div>
+              <div class="stage-row" id="stageRow"></div>
+              <div class="slider-row">
+                <span class="slider-label">all modes</span>
+                <span class="tick-box"><input id="tickAll" value="2" inputmode="numeric" aria-label="all modes ticks"></span>
+                <span class="tick-steps" data-row="0">
+                  <button data-step="-5">-5</button><button data-step="-1">-1</button><button data-step="1">+1</button><button data-step="5">+5</button>
+                </span>
+                <input type="range" id="sliderAll" min="1" max="240" value="2" aria-label="all modes ticks">
+              </div>
+              <div class="slider-row">
+                <span class="slider-label">wave</span>
+                <span class="tick-box"><input id="tickWave" value="2" inputmode="numeric" aria-label="wave ticks"></span>
+                <span class="tick-steps" data-row="1">
+                  <button data-step="-5">-5</button><button data-step="-1">-1</button><button data-step="1">+1</button><button data-step="5">+5</button>
+                </span>
+                <input type="range" id="sliderWave" min="1" max="240" value="2" aria-label="wave ticks">
+              </div>
+              <p class="stage-hint">tap + custom to make an editable copy of this stage</p>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="settings">
+            <div class="pane-head">
+              <span class="pane-title">appearance</span>
+              <span class="spacer"></span>
+              <button class="mini-btn credits-btn" id="creditsBtn">credits</button>
+            </div>
+            <div class="theme-grid" id="themeGrid"></div>
+            <button class="glow-row" id="glowBtn"><i></i><span id="glowLabel">glow on</span></button>
+            <div class="settings-cols">
+              <div class="setting-box">
+                <span>panel <b id="panelVal">90%</b></span>
+                <button class="step" data-key="panel" data-dir="-1" aria-label="smaller panel">-</button>
+                <button class="step" data-key="panel" data-dir="1" aria-label="bigger panel">+</button>
+              </div>
+              <div class="setting-box">
+                <span>font <b id="fontVal">150%</b></span>
+                <button class="step" data-key="font" data-dir="-1" aria-label="smaller font">-</button>
+                <button class="step" data-key="font" data-dir="1" aria-label="bigger font">+</button>
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="mini-btn" id="importBtn">import</button>
+              <button class="mini-btn" id="exportBtn">export</button>
+              <button class="mini-btn tutorial" id="tutorialBtn">tutorial</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="credits-modal" id="creditsModal" hidden>
+          <div class="credits-card">
+            <div class="credits-head">
+              <h3>credits</h3>
+              <button class="close-x" id="creditsClose" aria-label="close credits">x</button>
+            </div>
+            <p class="credits-sub">afterflow - who put it together</p>
+            <div class="credits-divider"></div>
+            <div class="credit-row">
+              <span class="avatar">sv</span>
+              <div><strong>sevend</strong><span>creator of afterflow + original ui</span></div>
+            </div>
+            <div class="credit-row">
+              <span class="avatar">sa</span>
+              <div><strong>sir abraham creakstopher the second</strong><span>bailerw21 - mobile support and a ton of stuff</span></div>
+            </div>
+            <div class="credit-row">
+              <span class="avatar">lg</span>
+              <div><strong>legion</strong><span>nyxw6_1 a ton of ideas</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="reopen" id="reopen" hidden>press f9 to open</button>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-head">
+    <h2>what it does</h2>
+    <p>three passes between your click and the frame.</p>
+  </div>
+
+  <ol class="flow">
+    <li class="flow-step">
+      <span class="flow-num">01</span>
+      <h3>reads the press</h3>
+      <p>stages scan your timing ahead of the input, before the frame is drawn.</p>
+    </li>
+    <li class="flow-step">
+      <span class="flow-num">02</span>
+      <h3>picks the earliest frame</h3>
+      <p>the press is held and matched to the earliest frame that still clears.</p>
+    </li>
+    <li class="flow-step">
+      <span class="flow-num">03</span>
+      <h3>sends it on time</h3>
+      <p>your early click lands where it should, without changing how you play.</p>
+    </li>
+  </ol>
+
+  <dl class="spec">
+    <div><dt>themes</dt><dd>14 presets with live color, from violet to white</dd></div>
+    <div><dt>builds</dt><dd>windows, macos, ios and android, one panel everywhere</dd></div>
+    <div><dt>buffer</dt><dd>up to 40 ticks, ten frames of lookahead at 60fps</dd></div>
+  </dl>
+</section>
+
+<section class="download" id="download">
+  <div class="download-inner">
+    <div class="download-copy">
+      <h2>get afterflow</h2>
+      <p>grab <span class="inline-version" data-version>the latest release</span>, drop it into geode, done.</p>
+      <p class="fine">requires geode 5.11.2. built for geometry dash 2.2081.</p>
+    </div>
+    <div class="download-actions">
+      <a class="btn primary" data-download href="https://github.com/afterflow-gd/afterflow/releases/latest/download/afterflow.prsevend.geode" target="_blank" rel="noreferrer">download</a>
+      <a class="btn ghost" href="https://github.com/afterflow-gd/afterflow/releases" target="_blank" rel="noreferrer">all releases</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>afterflow by prsevend</span>
+  <span class="footer-links">
+    <a href="https://github.com/afterflow-gd/afterflow" target="_blank" rel="noreferrer">github</a>
+    <a href="#top">back to top</a>
+  </span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.dots.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
